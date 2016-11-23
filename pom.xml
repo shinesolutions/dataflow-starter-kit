@@ -31,7 +31,6 @@
                <encoding>UTF-8</encoding>
                <consoleOutput>true</consoleOutput>
                <failsOnError>true</failsOnError>
-               <linkXRef>false</linkXRef>
              </configuration>
              <goals>
                <goal>check</goal>
@@ -73,5 +72,11 @@
       <artifactId>slf4j-jdk14</artifactId>
       <version>1.7.7</version>
     </dependency>
+      <dependency>
+          <groupId>junit</groupId>
+          <artifactId>junit</artifactId>
+          <version>4.11</version>
+          <scope>test</scope>
+      </dependency>
   </dependencies>
 </project>
