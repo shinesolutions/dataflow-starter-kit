@@ -28,7 +28,7 @@ public final class Runner {
         Method transformMethod = transformFinder.find(pipelineName);
         if (transformMethod == null) {
             logger.error(
-                    "Could not find a pipeline transformer annotated with @DataflowTransformer named {}",
+                    "Could not find a class annotated with @DataflowTransformer named {}",
                     pipelineName
             );
             throw new IllegalArgumentException("No transformer named " + pipelineName + " found.");

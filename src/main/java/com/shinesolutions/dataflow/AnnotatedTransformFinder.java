@@ -2,8 +2,6 @@ package com.shinesolutions.dataflow;
 
 import com.google.cloud.dataflow.sdk.Pipeline;
 import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
-import io.github.lukehutch.fastclasspathscanner.matchprocessor.ClassAnnotationMatchProcessor;
-import io.github.lukehutch.fastclasspathscanner.scanner.ClassInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,7 +43,10 @@ public class AnnotatedTransformFinder implements TransformFinder {
                 .map(aClass -> {
                     Annotation annotation = aClass.getAnnotation(DataflowTransformer.class);
                     try {
-                        return aClass.getMethod(((DataflowTransformer) annotation).method(), Pipeline.class);
+                        return aClass.getMethod(
+                                ((DataflowTransformer) annotation).method(),
+                                Pipeline.class
+                        );
                     } catch (NoSuchMethodException e) {
                         log.warn(
                                 "Could not find method called {} on {}",
