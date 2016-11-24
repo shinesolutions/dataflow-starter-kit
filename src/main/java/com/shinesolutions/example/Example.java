@@ -4,14 +4,14 @@ import com.google.cloud.dataflow.sdk.Pipeline;
 import com.google.cloud.dataflow.sdk.transforms.Create;
 import com.google.cloud.dataflow.sdk.transforms.DoFn;
 import com.google.cloud.dataflow.sdk.transforms.ParDo;
-import com.shinesolutions.dataflow.DataflowPipeline;
+import com.shinesolutions.dataflow.DataflowTransformer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * Created by gareth on 23/11/2016.
  */
-@DataflowPipeline(name = "example")
+@DataflowTransformer(name = "example")
 public final class Example {
     private static final Logger LOG = LoggerFactory.getLogger(Example.class);
 

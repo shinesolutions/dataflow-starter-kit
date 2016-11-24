@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface DataflowPipeline {
+public @interface DataflowTransformer {
     /**
      * @return - name of the pipeline
      */

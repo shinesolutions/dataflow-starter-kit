@@ -5,7 +5,7 @@ import java.lang.reflect.Method;
 /**
  * Created by gareth on 23/11/2016.
  */
-public interface PipelineFinder {
+public interface TransformFinder {
 
     /**
      * Given a named pipeline returns the method to invoke.

@@ -9,33 +9,38 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.Method;
 
 /**
- * Entry point for running dataflow pipelines. Looks for classes annotated with @DataflowPipeline
+ * Entry point for running dataflow pipelines. Looks for classes annotated with @DataflowTransformer
  * Created by gareth on 23/11/2016.
  */
 public final class Runner {
     private final Logger logger = LoggerFactory.getLogger(Runner.class);
 
-    private PipelineFinder pipelineFinder;
-    private Object pipelineInstance;
+    private Pipeline dataflowPipeline;
+    private TransformFinder transformFinder;
+    private Object transformer;
 
-    Runner(final PipelineFinder pipelineFinder) {
-        this.pipelineFinder = pipelineFinder;
+    Runner(final Pipeline dataflowPipeline, final TransformFinder transformFinder) {
+        this.dataflowPipeline = dataflowPipeline;
+        this.transformFinder = transformFinder;
     }
 
     void run(final String pipelineName) throws Exception {
-        Method pipelineMethod = pipelineFinder.find(pipelineName);
-        if (pipelineMethod == null) {
-            logger.error("Could not find a pipeline transformer annotated with @DataflowPipeline");
-            return;
+        Method transformMethod = transformFinder.find(pipelineName);
+        if (transformMethod == null) {
+            logger.error(
+                    "Could not find a pipeline transformer annotated with @DataflowTransformer named {}",
+                    pipelineName
+            );
+            throw new IllegalArgumentException("No transformer named " + pipelineName + " found.");
         }
 
-        pipelineInstance = pipelineMethod.getDeclaringClass().newInstance();
-        Pipeline dataflowPipeline = Pipeline.create(PipelineOptionsFactory.create());
-        pipelineMethod.invoke(pipelineInstance, dataflowPipeline);
+        transformer = transformMethod.getDeclaringClass().newInstance();
+        transformMethod.invoke(transformer, dataflowPipeline);
+        dataflowPipeline.run();
     }
 
-    Object getPipelineInstance() {
-        return this.pipelineInstance;
+    Object getTransformer() {
+        return transformer;
     }
 
     /**
@@ -45,7 +50,8 @@ public final class Runner {
      */
     public static void main(final String... args) throws Exception {
         PipelineOptions options = PipelineOptionsFactory.fromArgs(args).withValidation().create();
-        Runner runner = new Runner(new AnnotatedPipelineFinder());
+        Pipeline pipeline = Pipeline.create(options);
+        Runner runner = new Runner(pipeline, new AnnotatedTransformFinder());
         runner.run(args[0]);
     }
 }

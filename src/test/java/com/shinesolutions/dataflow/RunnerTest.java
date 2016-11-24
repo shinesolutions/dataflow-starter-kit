@@ -1,9 +1,8 @@
 package com.shinesolutions.dataflow;
 
 import com.google.cloud.dataflow.sdk.Pipeline;
+import com.google.cloud.dataflow.sdk.testing.TestPipeline;
 import org.junit.Test;
-
-import java.lang.reflect.Method;
 
 import static org.junit.Assert.*;
 
@@ -16,9 +15,14 @@ public class RunnerTest {
     public void shouldUsePipelineFinderToDiscoverNamedPipeline() throws Exception {
 
         final String[] pipelineName = new String[1];
-        Runner runner = new Runner(name -> {
+        Runner runner = new Runner(TestPipeline.create(), name -> {
             pipelineName[0] = name;
-            return null;
+            try {
+                return FakeTransformer.class.getMethod("transform", Pipeline.class);
+            } catch (NoSuchMethodException e) {
+                fail("This should not have happened " + e.getMessage());
+                return null;
+            }
         });
 
         runner.run("cheese");
@@ -28,9 +32,9 @@ public class RunnerTest {
 
     @Test
     public void shouldPassConfiguredPipelineToPipelineMethod() throws Exception {
-        Runner runner = new Runner(name -> {
+        Runner runner = new Runner(TestPipeline.create(), name -> {
             try {
-                return FakePipeline.class.getMethod("transform", Pipeline.class);
+                return FakeTransformer.class.getMethod("transform", Pipeline.class);
             } catch (NoSuchMethodException e) {
                 fail("Something went horribly wrong, " + e.getMessage());
                 return null;
@@ -39,18 +43,25 @@ public class RunnerTest {
 
         runner.run("whatever");
 
-        Pipeline actual = ((FakePipeline) runner.getPipelineInstance()).pipeline;
+        Pipeline actual = ((FakeTransformer) runner.getTransformer()).pipeline;
         assertNotNull("there should be a pipeline", actual);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowExceptionIfPipelineIsNotFound() throws Exception {
+        Runner runner = new Runner(null, name -> null);
+        runner.run("does not exist");
+    }
 
-    static class FakePipeline {
+
+    static class FakeTransformer {
         Pipeline pipeline;
 
-        public FakePipeline() {}
+        public FakeTransformer() {}
 
         public void transform(Pipeline pipeline) {
             this.pipeline = pipeline;
         }
     }
+
 }
