@@ -55,6 +55,12 @@
           <version>1.4.0</version>
           <configuration>
             <cleanupDaemonThreads>false</cleanupDaemonThreads>
+              <!--  To test the runner, use
+                    mvn exec:java
+                    (test scope used so that we pick up the logging impl)
+                -->
+              <mainClass>com.shinesolutions.dataflow.Runner</mainClass>
+              <classpathScope>test</classpathScope>
           </configuration>
         </plugin>
       </plugins>
@@ -68,22 +74,25 @@
       <version>[1.6.0, 2.0.0)</version>
     </dependency>
 
-    <!-- slf4j API frontend binding with JUL backend -->
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
       <version>1.7.7</version>
     </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-jdk14</artifactId>
-      <version>1.7.7</version>
-        <scope>test</scope>
-    </dependency>
       <dependency>
           <groupId>io.github.lukehutch</groupId>
           <artifactId>fast-classpath-scanner</artifactId>
           <version>LATEST</version>
+      </dependency>
+      <!--  only include the slf4j backend in the test scope,
+            since we don't want to impose any logging framework
+            on projects using this lib.
+        -->
+      <dependency>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-jdk14</artifactId>
+          <version>1.7.7</version>
+          <scope>test</scope>
       </dependency>
       <dependency>
           <groupId>junit</groupId>

@@ -8,11 +8,14 @@ import com.shinesolutions.dataflow.DataflowTransformer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.Serializable;
+
 /**
  * Created by gareth on 23/11/2016.
  */
 @DataflowTransformer(name = "example")
-public final class Example {
+public final class Example implements Serializable {
+
     private static final Logger LOG = LoggerFactory.getLogger(Example.class);
 
     /**

@@ -1,6 +1,7 @@
-package com.shinesolutions.dataflow;
+package com.shinesolutions.dataflow.transforms;
 
 import com.google.cloud.dataflow.sdk.Pipeline;
+import com.shinesolutions.dataflow.DataflowTransformer;
 
 /**
  * Created by garethjones on 24/11/16.

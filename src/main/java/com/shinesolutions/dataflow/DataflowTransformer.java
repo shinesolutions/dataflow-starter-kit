@@ -19,6 +19,7 @@ public @interface DataflowTransformer {
     String name();
 
     /**
+     * Method should take one Pipeline argument and return void.
      * @return - method name to invoke, defaults to "transform"
      */
     String method() default "transform";

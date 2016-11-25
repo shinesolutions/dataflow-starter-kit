@@ -1,7 +1,6 @@
 package com.shinesolutions.dataflow;
 
 import com.google.cloud.dataflow.sdk.Pipeline;
-import com.google.cloud.dataflow.sdk.options.PipelineOptions;
 import com.google.cloud.dataflow.sdk.options.PipelineOptionsFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,9 +48,13 @@ public final class Runner {
      * @throws Exception - if something goes wrong in the pipeline.
      */
     public static void main(final String... args) throws Exception {
-        PipelineOptions options = PipelineOptionsFactory.fromArgs(args).withValidation().create();
+        PipelineOptionsFactory.register(StarterKitOptions.class);
+        StarterKitOptions options = PipelineOptionsFactory
+                .fromArgs(args)
+                .withValidation()
+                .as(StarterKitOptions.class);
         Pipeline pipeline = Pipeline.create(options);
         Runner runner = new Runner(pipeline, new AnnotatedTransformFinder());
-        runner.run(args[0]);
+        runner.run(options.getTransformer());
     }
 }
